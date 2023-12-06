@@ -1,4 +1,4 @@
- Adversarial Handwritten Signature Detection
+# Adversarial Handwritten Signature Detection
 
 Project code has been placed at `https://github.com/Satish-Chilloji/adversarial_handwritten_signature_detection.git`
 
@@ -9,10 +9,10 @@ cyclegan is present in  `models` folder
 
 Run below code in Google Colab to generate adversary images and signature detection using Siamese Network:
 
-# Import Git repository
+## Import Git repository
 `! git clone https://github.com/Satish-Chilloji/adversarial_handwritten_signature_detection.git`
 
-# Import dependencies
+## Import dependencies
 The trained models have been kept in google drive and we need to copy below folder to be copied to root google drive directory for user running the code:
 My Drive -> Project-SignatureDetection -> models -> (Contents of below drive)
 `https://drive.google.com/drive/folders/1iAWbw6KgjSMxDdECdSbOrXNXCjP_9hA1`
@@ -21,25 +21,25 @@ Below are naming conventions for saved trained models:
 `best_model_<epochs>.pt`
 where <epochs> represent number of epochs used in training respective model.
 
-# Change to code folder core
+## Change to code folder core
 ```
 import os
 os.chdir('adversarial_handwritten_signature_detection/')
 ```
 
-# Requirement installation
+## Requirement installation
 `!pip install -r requirements.txt`
 
-# Train GAN
+## Train GAN
 `!python train.py --dataroot ./datasets/userspecific_signdata --name userspecific_signdata --n_epochs 10 --n_epochs_decay 10 --model cycle_gan --display_id -1`
 
-# Take latest trained GAN checkpoint
+## Take latest trained GAN checkpoint
 `cp ./checkpoints/userspecific_signdata/latest_net_G_A.pth ./checkpoints/userspecific_signdata/latest_net_G.pth`
 
-# Generate images on test data
+## Generate images on test data
 `!python test.py --dataroot datasets/userspecific_signdata/testA --name userspecific_signdata --model test --no_dropout`
 
-# Cycle GAN output
+## Cycle GAN output
 ```
 import matplotlib.pyplot as plt
 
@@ -50,13 +50,13 @@ img = plt.imread('../results/userspecific_signdata/test_latest/real/01_049_real.
 plt.imshow(img)
 ```
 
-# Importing the nesseccary packakged for running the Siemese network.
+## Importing the nesseccary packakged for running the Siamese network.
 ```
 %pip install randimage
 %pip install torchvision
 ```
 
-# Get Imports
+## Get Imports
 ```
 from matplotlib.pyplot import show
 from PIL import Image
@@ -75,7 +75,7 @@ import shutil
 drive.mount('/content/gdrive')
 ```
 
-# This below code would configure train and test data and csv paths
+## This below code would configure train and test data and csv paths
 ```
 training_folder = "/content/train/train"
 testing_folder = "/content/adversarial_handwritten_signature_detection/results/userspecific_signdata/test_latest"
@@ -83,7 +83,7 @@ training_csv = "/content/gdrive/My Drive/Project-SignatureDetection/train_data.c
 gan_testing_csv =  "/content/gdrive/My Drive/Project-SignatureDetection/gan_test_data.csv"
 ```
 
-# organizing the images created by CycleGAN, for SNN training.
+## Organizing the images created by CycleGAN, for SNN training.
 ```
 def organize_images(source_folder, target_folder):
     # Create the target folders if they don't exist
@@ -110,7 +110,7 @@ organize_images(source_folder, target_folder)
 ```
 
 
-# Loading the data for SNN inference
+## Loading the data for SNN inference
 ```
 test_ds = DataSets(testing_folder, gan_testing_csv, transformation_fn = transforms.Compose([transforms.Resize((105,105)), transforms.ToTensor()]))
 

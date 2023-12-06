@@ -126,7 +126,7 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 fig, axes = plt.subplots(1, 2, figsize=(10, 5))
 ```
 
-## Testing the SNN model and displying the real and fake images scoare.
+## Testing the SNN model and displying the real and fake images score.
 
 The score is show for the last image.
 ```

@@ -2,10 +2,10 @@
 
 Project code has been placed at `https://github.com/Satish-Chilloji/adversarial_handwritten_signature_detection.git`
 
-`train.py` is used for training
-`test.py` is used for inference
-relevant data is present in folder `datasets`
-cyclegan is present in  `models` folder
+`train.py` is used for training the CycleGAN
+`test.py` is used for inference the CycleGAN
+relevant data for GAN is present in folder `datasets`
+CycleGan architecture is present in  `models` folder
 
 Run below code in Google Colab to generate adversary images and signature detection using Siamese Network:
 
@@ -13,7 +13,7 @@ Run below code in Google Colab to generate adversary images and signature detect
 `! git clone https://github.com/Satish-Chilloji/adversarial_handwritten_signature_detection.git`
 
 ## Import dependencies
-The trained models have been kept in google drive and we need to copy below folder to be copied to root google drive directory for user running the code:
+The SNN trained models checkpoints have been kept in google drive and we need to copy below folder to be copied to root google drive directory for the user running the code:
 My Drive -> Project-SignatureDetection -> models -> (Contents of below drive)
 `https://drive.google.com/drive/folders/1iAWbw6KgjSMxDdECdSbOrXNXCjP_9hA1`
 
@@ -21,16 +21,17 @@ Below are naming conventions for saved trained models:
 `best_model_<epochs>.pt`
 where <epochs> represent number of epochs used in training respective model.
 
-## Change to code folder core
+## Change to folder Core
 ```
 import os
 os.chdir('adversarial_handwritten_signature_detection/')
 ```
 
-## Requirement installation
+## Requirement installation for GAN
 `!pip install -r requirements.txt`
 
-## Train GAN
+## Training GAN,
+It takes few minutes.
 `!python train.py --dataroot ./datasets/userspecific_signdata --name userspecific_signdata --n_epochs 10 --n_epochs_decay 10 --model cycle_gan --display_id -1`
 
 ## Take latest trained GAN checkpoint
@@ -50,13 +51,15 @@ img = plt.imread('../results/userspecific_signdata/test_latest/real/01_049_real.
 plt.imshow(img)
 ```
 
-## Importing the nesseccary packakged for running the Siamese network.
+## The below codes is now running for the Siamese Neural Network
+
+## Importing the nesseccary Packages for running the Siamese network.
 ```
 %pip install randimage
 %pip install torchvision
 ```
 
-## Get Imports
+##  Import the Libraries
 ```
 from matplotlib.pyplot import show
 from PIL import Image
@@ -123,7 +126,7 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 fig, axes = plt.subplots(1, 2, figsize=(10, 5))
 ```
 
-# Testing the SNN model
+## Testing the SNN model
 ```
 i = 0
 for i, data in enumerate(data_loader_test, 0):
@@ -147,7 +150,7 @@ for i, data in enumerate(data_loader_test, 0):
   img2 = plt.imread(f'/content/adversarial_handwritten_signature_detection/results/userspecific_signdata/test_latest/fake/0{i + 1}_049_fake.png')
 ```
 
-  # Display the real image in the first subplot
+  ## Display the real image in the first subplot
   ```
   axes[0].imshow(img1)
   axes[0].set_title('Real Image')

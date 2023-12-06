@@ -126,7 +126,9 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 fig, axes = plt.subplots(1, 2, figsize=(10, 5))
 ```
 
-## Testing the SNN model
+## Testing the SNN model and displying the real and fake images scoare.
+
+The score is show for the last image.
 ```
 i = 0
 for i, data in enumerate(data_loader_test, 0):
@@ -148,16 +150,13 @@ for i, data in enumerate(data_loader_test, 0):
   img1 = mpimg.imread(f'/content/adversarial_handwritten_signature_detection/results/userspecific_signdata/test_latest/real/0{i + 1}_049_real.png')
 
   img2 = plt.imread(f'/content/adversarial_handwritten_signature_detection/results/userspecific_signdata/test_latest/fake/0{i + 1}_049_fake.png')
-```
 
-  ## Display the real image in the first subplot
-  ```
   axes[0].imshow(img1)
   axes[0].set_title('Real Image')
   axes[0].axis('off')```
 
   # Display the fake image in the second subplot
-  ```axes[1].imshow(img2)
+  axes[1].imshow(img2)
   axes[1].set_title('Fake Image')
   axes[1].axis('off')
 

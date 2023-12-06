@@ -1,19 +1,3 @@
-# Commented out IPython magic to ensure Python compatibility.
-# %pip install tensorflow_addons
-
-# from google.colab import drive
-# drive.mount('/content/gdrive')
-
-# Commented out IPython magic to ensure Python compatibility.
-# %cd /content/gdrive/MyDrive/Project
-
-!unzip 'train-20231205T034516Z-001.zip' -d '/content/train/'
-!unzip 'test-20231205T034513Z-001.zip' -d '/content/test/'
-
-# Commented out IPython magic to ensure Python compatibility.
-# %pip install randimage
-# %pip install torchvision
-
 from matplotlib.pyplot import show
 from PIL import Image
 from torch.utils.data import Dataset, DataLoader
@@ -29,12 +13,6 @@ import torch.nn.functional as F
 import pandas as pd
 import torchvision
 import torchvision.transforms as transforms
-
-#load dataset
-training_folder = "/content/train/train"
-testing_folder = "/content/test/test"
-training_csv = "/content/gdrive/My Drive/Project/train_data.csv"
-testing_csv =  "/content/gdrive/My Drive/Project/test_data.csv"
 
 class DataSets():
     def __init__(self, dir_train, path_csv, transformation_fn = None):
@@ -66,10 +44,7 @@ class DataSets():
 
     def __len__(self):
         return len(self.ds)
-
-# Get data for training
-train_ds = DataSets(training_folder, training_csv, transformation_fn = transforms.Compose([transforms.Resize((105,105)), transforms.ToTensor()]))
-
+		
 # Siamese Network
 class SiameseNeuralNetwork(nn.Module):
     def __init__(self):
@@ -137,52 +112,3 @@ class Contrastive_Loss(torch.nn.Module):
             loss = torch.mean((1-label) * torch.pow(euclidean_length, 2) + (label) * torch.pow(torch.clamp(self.margin - euclidean_length, min=0.0), 2))
 
             return loss
-
-data_loader = DataLoader(train_ds, shuffle=True, num_workers=8, pin_memory=True, batch_size=32)
-
-snn = SiameseNeuralNetwork().cuda()
-
-# Loss
-loss_module = Contrastive_Loss()
-
-# Optimizer
-opt = torch.optim.Adam(snn.parameters(), lr=1e-3, weight_decay=0.0005)
-
-#train the model
-def train(num_epochs):
-    model_losses = []
-    display_counter = []
-    i = 0
-
-    for epoch in range(1,num_epochs):
-        for i, data in enumerate(data_loader,0):
-            image1, image2 , label = data
-            image1, image2 , label = image1.cuda(), image2.cuda() , label.cuda()
-
-            # Following code line resets the gradients
-            opt.zero_grad()
-
-            # Send both images to our SNN
-            output1, output2 = snn(image1, image2)
-
-            contrastive_loss = loss_module(output1, output2, label)
-            contrastive_loss.backward() # Gradient computation
-            opt.step() # Single optimization step
-
-        print("Epoch {}\n Training loss: {}\n".format(epoch, contrastive_loss.item()))
-
-        i = i + 10 # Increment counter to display plot in steps of 10
-        display_counter.append(i)
-        model_losses.append(contrastive_loss.item())
-    show(display_counter, model_losses)
-
-    # Returned trained model
-    return snn
-
-#set the device to cuda
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-
-snn_model = train(50)
-
-torch.save(snn_model.state_dict(), "../best_model_50.pt")
-print("Model has been Saved.")

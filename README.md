@@ -120,10 +120,12 @@ saved_snn_model = SiameseNeuralNetwork().cuda()
 saved_snn_model.load_state_dict(torch.load("/content/gdrive/My Drive/Project-SignatureDetection/best_model_50.pt"))
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-fig, axes = plt.subplots(1, 2, figsize=(10, 5))```
+fig, axes = plt.subplots(1, 2, figsize=(10, 5))
+```
 
-# Testing
-```i = 0
+# Testing the SNN model
+```
+i = 0
 for i, data in enumerate(data_loader_test, 0):
   image1, image2, label = data
   concat = torch.cat((image1, image2), 0)
@@ -142,10 +144,12 @@ for i, data in enumerate(data_loader_test, 0):
 
   img1 = mpimg.imread(f'/content/adversarial_handwritten_signature_detection/results/userspecific_signdata/test_latest/real/0{i + 1}_049_real.png')
 
-  img2 = plt.imread(f'/content/adversarial_handwritten_signature_detection/results/userspecific_signdata/test_latest/fake/0{i + 1}_049_fake.png')```
+  img2 = plt.imread(f'/content/adversarial_handwritten_signature_detection/results/userspecific_signdata/test_latest/fake/0{i + 1}_049_fake.png')
+```
 
   # Display the real image in the first subplot
-  ```axes[0].imshow(img1)
+  ```
+  axes[0].imshow(img1)
   axes[0].set_title('Real Image')
   axes[0].axis('off')```
 

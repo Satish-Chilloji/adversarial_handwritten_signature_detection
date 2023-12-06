@@ -1,4 +1,4 @@
-# adversarial_handwritten_signature_detection
+ Adversarial Handwritten Signature Detection
 
 Project code has been placed at `https://github.com/Satish-Chilloji/adversarial_handwritten_signature_detection.git`
 
@@ -21,9 +21,11 @@ Below are naming conventions for saved trained models:
 `best_model_<epochs>.pt`
 where <epochs> represent number of epochs used in training respective model.
 
-# Change to code folder
-```import os
-os.chdir('adversarial_handwritten_signature_detection/')```
+# Change to code folder core
+```
+import os
+os.chdir('adversarial_handwritten_signature_detection/')
+```
 
 # Requirement installation
 `!pip install -r requirements.txt`
@@ -37,28 +39,52 @@ os.chdir('adversarial_handwritten_signature_detection/')```
 # Generate images on test data
 `!python test.py --dataroot datasets/userspecific_signdata/testA --name userspecific_signdata --model test --no_dropout`
 
-# Run below package installations
-```%pip install randimage
-%pip install torchvision```
+# Cycle GAN output
+```
+import matplotlib.pyplot as plt
+
+img = plt.imread('../results/userspecific_signdata/test_latest/fake/01_049_fake.png')
+plt.imshow(img)
+
+img = plt.imread('../results/userspecific_signdata/test_latest/real/01_049_real.png')
+plt.imshow(img)
+```
+
+# Importing the nesseccary packakged for running the Siemese network.
+```
+%pip install randimage
+%pip install torchvision
+```
 
 # Get Imports
-```from matplotlib.pyplot import show
+```
+from matplotlib.pyplot import show
 from PIL import Image
 from skimage import io
 from snn import Contrastive_Loss, SiameseNeuralNetwork, DataSets
 from google.colab import drive
+import torchvision.transforms as transforms
+from torch.utils.data import DataLoader
+import matplotlib.image as mpimg
+import torch
+import torch.nn.functional as F
 
 import os
 import shutil
 
-drive.mount('/content/gdrive')```
+drive.mount('/content/gdrive')
+```
 
 # This below code would configure train and test data and csv paths
-```training_folder = "/content/train/train"
+```
+training_folder = "/content/train/train"
 testing_folder = "/content/adversarial_handwritten_signature_detection/results/userspecific_signdata/test_latest"
 training_csv = "/content/gdrive/My Drive/Project-SignatureDetection/train_data.csv"
 gan_testing_csv =  "/content/gdrive/My Drive/Project-SignatureDetection/gan_test_data.csv"
+```
 
+# organizing the images created by CycleGAN, for SNN training.
+```
 def organize_images(source_folder, target_folder):
     # Create the target folders if they don't exist
     real_folder = os.path.join(target_folder, 'real')
@@ -81,29 +107,17 @@ source_folder = "/content/adversarial_handwritten_signature_detection/results/us
 target_folder = "/content/adversarial_handwritten_signature_detection/results/userspecific_signdata/test_latest/"  # Change this to your desired target folder
 
 organize_images(source_folder, target_folder)
+```
 
-import matplotlib.pyplot as plt
 
-img = plt.imread('../results/userspecific_signdata/test_latest/fake/01_049_fake.png')
-plt.imshow(img)
-
-img = plt.imread('../results/userspecific_signdata/test_latest/real/01_049_real.png')
-plt.imshow(img)
-
-import torchvision.transforms as transforms
-from torch.utils.data import DataLoader```
-
-# Get data for testing
-```test_ds = DataSets(testing_folder, gan_testing_csv, transformation_fn = transforms.Compose([transforms.Resize((105,105)), transforms.ToTensor()]))
+# Loading the data for SNN inference
+```
+test_ds = DataSets(testing_folder, gan_testing_csv, transformation_fn = transforms.Compose([transforms.Resize((105,105)), transforms.ToTensor()]))
 
 data_loader_test = DataLoader(test_ds, shuffle=True, num_workers=8, pin_memory=True, batch_size=1)
 
 saved_snn_model = SiameseNeuralNetwork().cuda()
 saved_snn_model.load_state_dict(torch.load("/content/gdrive/My Drive/Project-SignatureDetection/best_model_50.pt"))
-
-import matplotlib.image as mpimg
-import torch
-import torch.nn.functional as F
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 fig, axes = plt.subplots(1, 2, figsize=(10, 5))```
@@ -147,4 +161,6 @@ for i, data in enumerate(data_loader_test, 0):
   if i == 10:
      break
 
-plt.show()```
+plt.show()
+
+```

@@ -15,6 +15,12 @@ import pandas as pd
 import torchvision
 import torchvision.transforms as transforms
 
+#load dataset
+training_folder = "/content/train/train"
+testing_folder = "/content/adversarial_handwritten_signature_detection/results/userspecific_signdata/test_latest"
+training_csv = "/content/gdrive/My Drive/Project-SignatureDetection/train_data.csv"
+gan_testing_csv =  "/content/gdrive/My Drive/Project-SignatureDetection/gan_test_data.csv"
+
 # Get data for training
 train_ds = DataSets(training_folder, training_csv, transformation_fn = transforms.Compose([transforms.Resize((105,105)), transforms.ToTensor()]))
 data_loader = DataLoader(train_ds, shuffle=True, num_workers=8, pin_memory=True, batch_size=32)
